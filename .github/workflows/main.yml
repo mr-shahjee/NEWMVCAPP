@@ -1,1 +1,29 @@
 
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore MyMVCApp.csproj
+
+      - name: Build
+        run: dotnet build MyMVCApp.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish MyMVCApp.csproj -c Release -o publish

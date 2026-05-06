@@ -1,14 +1,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
+# Copy everything
 COPY . .
 
-COPY . .
-
+# Restore, build, publish (explicit project)
 RUN dotnet restore MyMVCApp.csproj
-RUN dotnet build MyMVCApp.csproj -c Release
-RUN dotnet publish MyMVCApp.csproj -c Release -o /app/out
+RUN dotnet build MyMVCApp.csproj -c Release --no-restore
+RUN dotnet publish MyMVCApp.csproj -c Release -o /app/out --no-build
 
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
